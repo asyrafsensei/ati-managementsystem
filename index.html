@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATI Management System V1</title>
+<style>
+:root{--navy:#142d65;--gold:#d4a43a;--lav:#e9ddfb;--rose:#fce4e8;--cream:#fff1d6;--sky:#ddebfA;--green:#dcfce7;--ink:#24345a;--bg:#f7f3fc}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,system-ui,Segoe UI,sans-serif;color:var(--ink)}
+.app{display:flex;min-height:100vh}.sidebar{width:245px;background:var(--navy);color:white;padding:22px 15px;display:flex;flex-direction:column;gap:15px;flex-shrink:0}
+.brand{display:flex;align-items:center;gap:12px;padding:5px 8px 20px;border-bottom:1px solid #ffffff25}.brandmark{background:#fff;border-radius:50%;width:54px;height:54px;display:grid;place-items:center;color:var(--navy);font-weight:900;border:3px solid var(--gold);font-size:11px;text-align:center}.brand h2{font-size:15px;line-height:1.2;margin:0}.brand small{color:#e6d6a9}.nav{display:grid;gap:6px}.nav button{border:0;background:transparent;color:#e4eaff;text-align:left;padding:12px 14px;border-radius:13px;font-size:14px;cursor:pointer}.nav button:hover,.nav button.active{background:#fff;color:var(--navy);font-weight:700}.sidefoot{margin-top:auto;font-size:12px;color:#cbd5f0;padding:10px}
+main{flex:1;min-width:0;padding:26px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}.topbar h1{margin:0;color:var(--navy);font-size:26px}.topbar p{margin:5px 0 0;color:#777}.pill{background:#fff;border:1px solid #eee;padding:9px 13px;border-radius:30px;color:var(--navy);font-size:13px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:20px}.stat{border-radius:18px;padding:18px;box-shadow:0 5px 20px #182d6510}.stat:nth-child(1){background:var(--lav)}.stat:nth-child(2){background:var(--rose)}.stat:nth-child(3){background:var(--cream)}.stat:nth-child(4){background:var(--sky)}.stat label{font-size:13px;opacity:.8}.stat strong{display:block;font-size:26px;margin:9px 0;color:var(--navy)}.stat small{font-size:12px}
+.panel{background:white;border:1px solid #f0eaf7;border-radius:20px;padding:20px;margin-bottom:18px;box-shadow:0 6px 20px #142d6508}.panel h2{margin:0 0 15px;font-size:18px;color:var(--navy)}.panel h3{margin:0 0 12px;font-size:15px;color:var(--navy)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}label{font-size:13px;font-weight:650;color:#435176}input,select,textarea{width:100%;border:1px solid #ded8ea;border-radius:12px;padding:11px 12px;font:inherit;background:#fff;color:var(--ink)}textarea{min-height:85px;resize:vertical}.btn{border:0;border-radius:12px;padding:11px 16px;background:var(--navy);color:#fff;font-weight:700;cursor:pointer}.btn.gold{background:var(--gold);color:#33240a}.btn.light{background:#eee7fa;color:var(--navy)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}.notice{border-radius:14px;padding:12px 14px;background:var(--cream);color:#70521b;font-size:13px;margin-bottom:14px}
+.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:600px}th,td{text-align:left;padding:12px;border-bottom:1px solid #eee;font-size:13px}th{color:#687394;background:#faf8fd}.tag{display:inline-block;border-radius:20px;padding:5px 9px;background:var(--green);color:#24703a;font-size:11px;font-weight:700}
+.progressrow{margin:14px 0}.progressrow .line{height:11px;border-radius:10px;background:#eee;margin-top:8px;overflow:hidden}.progressrow .fill{height:100%;border-radius:10px;background:var(--gold)}
+.receipt{border:2px solid var(--gold);border-radius:18px;padding:20px;background:linear-gradient(140deg,#fff,#fff8e7)}.receipt .head{text-align:center;color:var(--navy);border-bottom:1px solid #e8d39b;padding-bottom:14px}.receipt h2{margin:0}.receipt .row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px dashed #ddd}.receipt .amount{font-size:25px;color:var(--navy);font-weight:800}
+.hidden{display:none!important}.small{font-size:12px;color:#777}.section{display:none}.section.show{display:block}.uploadbox{border:1px dashed #b7a2db;border-radius:14px;padding:15px;background:#faf7ff}
+@media(max-width:950px){.sidebar{width:210px}.cards{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+@media(max-width:650px){.app{display:block}.sidebar{width:100%;padding:12px}.brand{padding-bottom:10px}.nav{display:flex;overflow:auto;gap:5px}.nav button{white-space:nowrap;padding:10px}.sidefoot{display:none}main{padding:17px}.topbar h1{font-size:21px}.cards{grid-template-columns:1fr 1fr}.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}.topbar{align-items:flex-start;flex-direction:column}}
+@media print{.sidebar,.topbar,.actions,.no-print{display:none!important}main{padding:0}.panel{box-shadow:none}.section{display:none!important}.section.show{display:block!important}.receipt{border:2px solid #c89a32}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+<div class="brand"><div class="brandmark">ATI<br>2023</div><div><h2>AKADEMI TUNAS IMPIAN</h2><small>Ilmu untuk hari esok</small></div></div>
+<nav class="nav">
+<button class="active" data-tab="dashboard">▦ Dashboard</button>
+<button data-tab="registration">＋ Pendaftaran</button>
+<button data-tab="students">♙ Murid</button>
+<button data-tab="progress">▤ Kemajuan 3M</button>
+<button data-tab="fees">▣ Yuran & Resit</button>
+<button data-tab="reports">▥ Laporan</button>
+</nav>
+<div class="sidefoot">ATI Management System<br>Prototype V1 · 2027</div>
+</aside>
+<main>
+<div class="topbar"><div><h1 id="pageTitle">Dashboard</h1><p>Asas Kukuh, Masa Depan Gemilang!</p></div><div class="pill">● Prototype V1</div></div>
+
+<section class="section show" id="dashboard">
+<div class="cards">
+<div class="stat"><label>Jumlah Murid</label><strong id="statStudents">0</strong><small>Profil berdaftar</small></div>
+<div class="stat"><label>Rekod Kemajuan</label><strong id="statProgress">0</strong><small>Rekod 3M dibuat</small></div>
+<div class="stat"><label>Kutipan Direkod</label><strong id="statFees">RM0</strong><small>Jumlah dalam demo</small></div>
+<div class="stat"><label>Resit Dikeluarkan</label><strong id="statReceipts">0</strong><small>Transaksi direkod</small></div>
+</div>
+<div class="grid2">
+<div class="panel"><h2>Selamat datang ke ATI</h2><p>Pengurusan murid, kemajuan 3M dan rekod yuran dalam satu platform.</p><div class="actions"><button class="btn" onclick="showTab('registration')">＋ Daftar murid</button><button class="btn gold" onclick="showTab('progress')">Rekod kemajuan</button></div></div>
+<div class="panel"><h2>Modul V1</h2><p>● Pendaftaran murid</p><p>● Profil dan senarai murid</p><p>● Kemajuan Membaca · Menulis · Mengira (TP1–TP6)</p><p>● Rekod bayaran & resit cetak</p><p>● Laporan ringkas</p></div>
+</div>
+<div class="panel"><h2>Murid terkini</h2><div class="tablewrap"><table><thead><tr><th>ID</th><th>Nama</th><th>Umur</th><th>Lokasi</th></tr></thead><tbody id="recentStudents"><tr><td colspan="4">Belum ada pendaftaran dalam demo.</td></tr></tbody></table></div></div>
+</section>
+
+<section class="section" id="registration">
+<div class="panel">
+<h2>＋ Pendaftaran Murid</h2><div class="notice">Prototype ini belum menyimpan data ke server. Rekod demo berada dalam sesi halaman ini sahaja; refresh akan reset data.</div>
+<form id="registerForm"><div class="formgrid">
+<div class="field"><label>Nama Waris *</label><input id="guardian" required placeholder="Nama penuh waris"></div>
+<div class="field"><label>No. Telefon Waris *</label><input id="phone" required type="tel" placeholder="012-345 6789"></div>
+<div class="field full"><label>Alamat Waris *</label><textarea id="address" required placeholder="Alamat lengkap"></textarea></div>
+<div class="field full"><label>Kawasan Kediaman</label><div style="display:flex;gap:10px"><label style="font-weight:normal"><input type="radio" name="area" value="Dalam PR1MA" checked style="width:auto"> Dalam PR1MA</label><label style="font-weight:normal"><input type="radio" name="area" value="Luar PR1MA" style="width:auto"> Luar PR1MA</label></div></div>
+<div class="field"><label>Nama Penuh Anak *</label><input id="child" required placeholder="Nama penuh murid"></div>
+<div class="field"><label>Umur *</label><select id="age" required><option value="">Pilih umur</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select></div>
+<div class="field full"><label>Gambar Anak (optional)</label><div class="uploadbox"><input id="photo" type="file" accept="image/*"><div class="small">Gambar hanya untuk preview pada sesi ini. Prototype ini belum mengupload imej ke server.</div><img id="photoPreview" class="hidden" style="width:110px;height:110px;object-fit:cover;border-radius:14px;margin-top:12px"></div></div>
+</div><div class="actions"><button class="btn" type="submit">Simpan pendaftaran demo</button><button class="btn light" type="reset">Kosongkan</button></div></form>
+</div></section>
+
+<section class="section" id="students"><div class="panel"><h2>Senarai Murid</h2><div class="tablewrap"><table><thead><tr><th>ID</th><th>Nama Murid</th><th>Umur</th><th>Waris</th><th>Telefon</th><th>Kawasan</th></tr></thead><tbody id="studentTable"><tr><td colspan="6">Belum ada rekod.</td></tr></tbody></table></div></div></section>
+
+<section class="section" id="progress"><div class="panel"><h2>Rekod Kemajuan 3M</h2><div class="notice">Pilih murid dan rekod tahap penguasaan TP1–TP6. Kad kemajuan boleh dipreview dan dicetak / disimpan PDF.</div>
+<form id="progressForm"><div class="formgrid">
+<div class="field full"><label>Murid *</label><select id="progressStudent" required><option value="">Daftar murid dahulu</option></select></div>
+<div class="field"><label>Membaca</label><select id="readTP"><option value="1">TP1</option><option value="2">TP2</option><option value="3">TP3</option><option value="4">TP4</option><option value="5">TP5</option><option value="6">TP6</option></select></div>
+<div class="field"><label>Menulis</label><select id="writeTP"><option value="1">TP1</option><option value="2">TP2</option><option value="3">TP3</option><option value="4">TP4</option><option value="5">TP5</option><option value="6">TP6</option></select></div>
+<div class="field"><label>Mengira</label><select id="mathTP"><option value="1">TP1</option><option value="2">TP2</option><option value="3">TP3</option><option value="4">TP4</option><option value="5">TP5</option><option value="6">TP6</option></select></div>
+<div class="field"><label>Tempoh / Bulan</label><input id="period" placeholder="Contoh: Januari 2027"></div>
+<div class="field full"><label>Catatan Guru</label><textarea id="comment" placeholder="Catatan perkembangan murid..."></textarea></div>
+</div><div class="actions"><button class="btn" type="submit">Simpan rekod demo</button></div></form>
+</div>
+<div class="panel hidden" id="progressCard"><h2>Preview Kad Kemajuan</h2><div id="cardPreview" class="receipt"></div><div class="actions"><button class="btn gold" onclick="window.print()">Cetak / Simpan PDF</button></div><p class="small">Dalam dialog cetak, pilih “Save as PDF” untuk menyimpan kad.</p></div>
+<div class="panel"><h2>Rekod Kemajuan Terdahulu</h2><div class="tablewrap"><table><thead><tr><th>Murid</th><th>Tempoh</th><th>Membaca</th><th>Menulis</th><th>Mengira</th></tr></thead><tbody id="progressTable"><tr><td colspan="5">Belum ada rekod.</td></tr></tbody></table></div></div>
+</section>
+
+<section class="section" id="fees"><div class="panel"><h2>Rekod Yuran & Resit</h2><div class="notice">Demo ini tidak mengesahkan pembayaran DuitNow secara automatik. Admin merekod transaksi setelah mengesahkan bayaran.</div>
+<form id="feeForm"><div class="formgrid">
+<div class="field full"><label>Murid *</label><select id="feeStudent" required><option value="">Daftar murid dahulu</option></select></div>
+<div class="field"><label>Jumlah (RM) *</label><input id="amount" type="number" min="0" step="0.01" required placeholder="80"></div>
+<div class="field"><label>Bayaran untuk *</label><input id="feePurpose" required placeholder="Reading Class - Januari 2027"></div>
+<div class="field"><label>Tarikh *</label><input id="feeDate" type="date" required></div>
+<div class="field"><label>Kaedah</label><select id="method"><option>DuitNow QR</option><option>Tunai</option><option>Bank Transfer</option><option>Lain-lain</option></select></div>
+</div><div class="actions"><button class="btn" type="submit">Rekod bayaran & jana resit</button></div></form>
+</div>
+<div class="panel hidden" id="receiptPanel"><h2>Resit Digital Preview</h2><div id="receiptPreview" class="receipt"></div><div class="actions"><button class="btn gold" onclick="window.print()">Cetak / Simpan PDF</button></div><p class="small">Dalam dialog cetak, pilih “Save as PDF”.</p></div>
+<div class="panel"><h2>Sejarah Pembayaran</h2><div class="tablewrap"><table><thead><tr><th>No. Resit</th><th>Murid</th><th>Tarikh</th><th>Bayaran</th><th>Jumlah</th></tr></thead><tbody id="feeTable"><tr><td colspan="5">Belum ada transaksi.</td></tr></tbody></table></div></div>
+</section>
+
+<section class="section" id="reports"><div class="panel"><h2>Laporan Ringkas V1</h2><p id="reportSummary">Daftar murid dan transaksi untuk melihat ringkasan.</p><div class="cards"><div class="stat"><label>Murid Dalam PR1MA</label><strong id="inPR1MA">0</strong></div><div class="stat"><label>Murid Luar PR1MA</label><strong id="outPR1MA">0</strong></div><div class="stat"><label>Jumlah Transaksi</label><strong id="txnCount">0</strong></div><div class="stat"><label>Kutipan</label><strong id="reportAmount">RM0</strong></div></div></div></section>
+</main></div>
+<script>
+let students=[], progress=[], fees=[], receiptNo=1,photoData="";
+const titles={dashboard:"Dashboard",registration:"Pendaftaran Murid",students:"Senarai Murid",progress:"Kemajuan 3M",fees:"Yuran & Resit",reports:"Laporan"};
+function showTab(id){document.querySelectorAll(".section").forEach(s=>s.classList.remove("show"));document.getElementById(id).classList.add("show");document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));document.getElementById("pageTitle").textContent=titles[id];if(id==="progress"||id==="fees")refreshSelects();window.scrollTo({top:0,behavior:"smooth"});}
+document.querySelectorAll(".nav button").forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.tab)));
+document.getElementById("photo").addEventListener("change",e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{photoData=r.result;let img=document.getElementById("photoPreview");img.src=photoData;img.classList.remove("hidden")};r.readAsDataURL(f)});
+document.getElementById("registerForm").addEventListener("submit",e=>{e.preventDefault();let id="ATI-"+String(students.length+1).padStart(3,"0");let area=document.querySelector('input[name="area"]:checked').value;students.push({id,guardian:guardian.value,phone:phone.value,address:address.value,area,child:child.value,age:age.value,photo:photoData});e.target.reset();photoData="";photoPreview.src="";photoPreview.classList.add("hidden");render();alert("Pendaftaran demo berjaya direkod. ID: "+id);});
+document.getElementById("progressForm").addEventListener("submit",e=>{e.preventDefault();let s=students.find(x=>x.id===progressStudent.value);if(!s)return;let r={student:s,read:readTP.value,write:writeTP.value,math:mathTP.value,period:period.value||"Tidak dinyatakan",comment:comment.value};progress.push(r);render();showProgressCard(r);e.target.reset();});
+document.getElementById("feeForm").addEventListener("submit",e=>{e.preventDefault();let s=students.find(x=>x.id===feeStudent.value);if(!s)return;let f={no:"ATI-2027-"+String(receiptNo++).padStart(4,"0"),student:s,date:feeDate.value,amount:Number(amount.value),purpose:feePurpose.value,method:method.value};fees.push(f);render();showReceipt(f);e.target.reset();feeDate.value=new Date().toISOString().slice(0,10);});
+function refreshSelects(){for(let id of ["progressStudent","feeStudent"]){let el=document.getElementById(id);let v=el.value;el.innerHTML='<option value="">Pilih murid</option>'+students.map(s=>`<option value="${s.id}">${s.id} — ${esc(s.child)}</option>`).join("");el.value=v;}}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function render(){document.getElementById("statStudents").textContent=students.length;document.getElementById("statProgress").textContent=progress.length;let total=fees.reduce((a,b)=>a+b.amount,0);document.getElementById("statFees").textContent="RM"+total.toFixed(2);document.getElementById("statReceipts").textContent=fees.length;
+let rows=students.map(s=>`<tr><td>${s.id}</td><td>${esc(s.child)}</td><td>${s.age}</td><td>${esc(s.area)}</td></tr>`).join("")||'<tr><td colspan="4">Belum ada pendaftaran.</td></tr>';recentStudents.innerHTML=rows;
+studentTable.innerHTML=students.map(s=>`<tr><td>${s.id}</td><td>${esc(s.child)}</td><td>${s.age}</td><td>${esc(s.guardian)}</td><td>${esc(s.phone)}</td><td>${esc(s.area)}</td></tr>`).join("")||'<tr><td colspan="6">Belum ada rekod.</td></tr>';
+progressTable.innerHTML=progress.map(r=>`<tr><td>${esc(r.student.child)}</td><td>${esc(r.period)}</td><td>TP${r.read}</td><td>TP${r.write}</td><td>TP${r.math}</td></tr>`).join("")||'<tr><td colspan="5">Belum ada rekod.</td></tr>';
+feeTable.innerHTML=fees.map(f=>`<tr><td>${f.no}</td><td>${esc(f.student.child)}</td><td>${esc(f.date)}</td><td>${esc(f.purpose)}</td><td>RM${f.amount.toFixed(2)}</td></tr>`).join("")||'<tr><td colspan="5">Belum ada transaksi.</td></tr>';
+document.getElementById("inPR1MA").textContent=students.filter(s=>s.area==="Dalam PR1MA").length;document.getElementById("outPR1MA").textContent=students.filter(s=>s.area==="Luar PR1MA").length;document.getElementById("txnCount").textContent=fees.length;document.getElementById("reportAmount").textContent="RM"+total.toFixed(2);document.getElementById("reportSummary").textContent=`${students.length} murid · ${progress.length} rekod kemajuan · ${fees.length} transaksi · Kutipan RM${total.toFixed(2)}`;refreshSelects();}
+function showProgressCard(r){let box=document.getElementById("progressCard");box.classList.remove("hidden");cardPreview.innerHTML=`<div class="head"><h2>AKADEMI TUNAS IMPIAN</h2><b style="color:#b8860b">KAD KEMAJUAN MURID</b><p>Ilmu untuk hari esok</p></div><div style="display:flex;gap:15px;align-items:center;margin:18px 0">${r.student.photo?`<img src="${r.student.photo}" style="width:95px;height:95px;object-fit:cover;border-radius:15px">`:`<div style="width:95px;height:95px;border-radius:15px;background:#e9ddfb;display:grid;place-items:center;color:#142d65;font-weight:800">ATI</div>`}<div><h3>${esc(r.student.child)}</h3><p>Umur ${r.student.age} · ${r.student.id}</p><p>${esc(r.period)}</p></div></div>${progressBar("Membaca",r.read,"#8b5cf6")}${progressBar("Menulis",r.write,"#e8799b")}${progressBar("Mengira",r.math,"#d4a43a")}<div style="margin-top:16px"><b>Catatan Guru</b><p>${esc(r.comment||"Tiada catatan.")}</p></div><div style="background:#142d65;color:#fff;text-align:center;padding:12px;border-radius:12px;margin-top:16px;color:#d4a43a;font-weight:bold">ASAS KUKUH, MASA DEPAN GEMILANG!</div>`;box.scrollIntoView({behavior:"smooth"});}
+function progressBar(name,tp,color){return `<div class="progressrow"><div style="display:flex;justify-content:space-between"><b>${name}</b><b>TP${tp}</b></div><div class="line"><div class="fill" style="width:${tp/6*100}%;background:${color}"></div></div></div>`;}
+function showReceipt(f){receiptPanel.classList.remove("hidden");receiptPreview.innerHTML=`<div class="head"><h2>AKADEMI TUNAS IMPIAN</h2><b style="color:#b8860b">RESIT RASMI PEMBAYARAN</b><p>Asas Kukuh, Masa Depan Gemilang!</p></div><div class="row"><span>No. Resit</span><b>${f.no}</b></div><div class="row"><span>Received From</span><b>${esc(f.student.guardian)}</b></div><div class="row"><span>Nama Murid</span><b>${esc(f.student.child)}</b></div><div class="row"><span>Amount</span><span class="amount">RM${f.amount.toFixed(2)}</span></div><div class="row"><span>Payment for</span><b>${esc(f.purpose)}</b></div><div class="row"><span>Tarikh Bayaran</span><b>${esc(f.date)}</b></div><div class="row"><span>Kaedah</span><b>${esc(f.method)}</b></div><p style="text-align:center;color:#142d65;font-weight:bold;margin-top:20px">TERIMA KASIH · AKADEMI TUNAS IMPIAN</p>`;receiptPanel.scrollIntoView({behavior:"smooth"});}
+feeDate.value=new Date().toISOString().slice(0,10);
+</script>
+</body>
+</html>
