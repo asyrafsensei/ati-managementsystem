@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ms"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ATI Management System</title>
+<style>
+:root{--n:#142d65;--g:#d4a43a;--bg:#f7f3fc}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:system-ui,sans-serif;color:#24345a}
+header{background:var(--n);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+nav{display:flex;gap:6px;overflow:auto;padding:10px 16px;background:#fff;border-bottom:1px solid #eee}
+nav button{border:0;background:#eee7fa;color:var(--n);padding:9px 14px;border-radius:20px;white-space:nowrap;font-weight:600}
+nav button.on{background:var(--n);color:#fff}
+main{padding:16px;max-width:900px;margin:auto}
+.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 4px 16px #142d6510}
+h2{margin:0 0 12px;font-size:17px;color:var(--n)}
+label{display:block;font-size:13px;font-weight:600;margin:10px 0 4px}
+input,select,textarea{width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;font:inherit}
+.btn{border:0;border-radius:10px;padding:10px 14px;background:var(--n);color:#fff;font-weight:700;margin-top:12px}
+.btn.g{background:var(--g);color:#33240a}.btn.s{padding:6px 10px;margin:0;font-size:12px}
+.tw{overflow:auto}table{width:100%;border-collapse:collapse;min-width:460px}th,td{text-align:left;padding:9px;border-bottom:1px solid #eee;font-size:13px}
+.msg{color:#b3261e;font-size:13px;min-height:18px;margin-top:8px}
+#login{max-width:380px;margin:40px auto;padding:0 16px}
+.doc{border:2px solid var(--g);border-radius:14px;padding:18px;background:#fffaf0;margin-bottom:14px}
+.doc h3{text-align:center;margin:0 0 4px;color:var(--n)}
+.r{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #ddd}
+.bar{height:10px;background:#eee;border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--g)}
+[hidden]{display:none!important}
+@media print{body *{visibility:hidden}#doc,#doc *{visibility:visible}#doc{position:absolute;left:0;top:0;width:100%}.np{display:none!important}}
+</style></head><body>
+
+<div id="login"><div class="card"><h2 style="text-align:center">AKADEMI TUNAS IMPIAN</h2>
+<nav style="padding:0 0 10px;background:none;border:0"><button class="on" id="tA" onclick="mode('a')">Admin</button><button id="tW" onclick="mode('w')">Waris</button></nav>
+<div id="fa"><label>Emel</label><input id="em" type="email"><label>Kata laluan</label><input id="pw" type="password"><button class="btn" onclick="adminLogin()">Log masuk</button></div>
+<div id="fw" hidden><label>No. telefon</label><input id="tel" type="tel"><label>PIN 6 digit</label><input id="pin" type="password" inputmode="numeric" maxlength="6"><button class="btn" onclick="warisLogin()">Log masuk</button></div>
+<div class="msg" id="lm"></div></div></div>
+
+<div id="app" hidden>
+<header><b>ATI Management System</b><button class="btn s g" onclick="logout()">Keluar</button></header>
+<nav id="nv"><button data-t="m" class="on">Murid</button><button data-t="k">Kemajuan 3M</button><button data-t="b">Yuran</button></nav>
+<main>
+<div class="sec" id="s-m">
+<div class="card"><h2>Daftar murid</h2><form id="fm"><label>Nama waris</label><input id="gn" required><label>No. telefon waris</label><input id="gt" type="tel" required><label>Nama murid</label><input id="cn" required><label>Kelas</label><select id="ck"><option>Reading</option><option>3M</option></select><button class="btn">Simpan</button></form></div>
+<div class="card"><h2>Senarai murid</h2><div class="tw"><table><thead><tr><th>Murid</th><th>Kelas</th><th>Waris</th><th>Telefon</th><th></th></tr></thead><tbody id="tm"></tbody></table></div></div></div>
+
+<div class="sec" id="s-k" hidden>
+<div class="card"><h2>Rekod kemajuan</h2><form id="fk"><label>Murid</label><select id="km" required></select><label>Bulan</label><input id="kb" type="month" required><label>Membaca</label><select class="tp" id="kr"></select><label>Menulis</label><select class="tp" id="kw"></select><label>Mengira</label><select class="tp" id="kc"></select><label>Catatan guru</label><textarea id="kn"></textarea><button class="btn">Simpan</button></form></div>
+<div class="card"><h2>Rekod terdahulu</h2><div class="tw"><table><thead><tr><th>Murid</th><th>Tempoh</th><th>M / W / K</th><th></th></tr></thead><tbody id="tk"></tbody></table></div></div></div>
+
+<div class="sec" id="s-b" hidden>
+<div class="card"><h2>Rekod bayaran</h2><form id="fb"><label>Murid</label><select id="bm" required></select><label>Jenis</label><select id="bj"><option>Registration</option><option>Reading</option><option>3M</option></select><label>Jumlah (RM)</label><input id="ba" type="number" step="0.01" min="0" value="20" required><label>Bulan</label><input id="bb" type="month" required><button class="btn">Rekod &amp; jana resit</button></form></div>
+<div class="card"><h2>Sejarah bayaran</h2><div class="tw"><table><thead><tr><th>Resit</th><th>Murid</th><th>Bayaran</th><th>Jumlah</th><th></th></tr></thead><tbody id="tb"></tbody></table></div></div></div>
+
+<div class="sec" id="s-w" hidden>
+<div class="card"><h2 id="wh">Anak saya</h2><div class="tw"><table><thead><tr><th>Murid</th><th>Kelas</th></tr></thead><tbody id="wm"></tbody></table></div></div>
+<div class="card"><h2>Bayaran</h2><div class="tw"><table><thead><tr><th>Resit</th><th>Murid</th><th>Bayaran</th><th>Jumlah</th><th></th></tr></thead><tbody id="wb"></tbody></table></div></div>
+<div class="card"><h2>Kemajuan</h2><div class="tw"><table><thead><tr><th>Murid</th><th>Tempoh</th><th>M / W / K</th><th></th></tr></thead><tbody id="wk"></tbody></table></div></div></div>
+
+<div id="doc"></div>
+</main></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
+<script>
+const sb=supabase.createClient('https://rcsfnmnfvuvpynhpwjob.supabase.co','sb_publishable_1dp7A8KNueA7ijlwv04nNg_CcOxUmxH');
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=s=>s.replace(/\D/g,'');
+const BL=['Jan','Feb','Mac','Apr','Mei','Jun','Jul','Ogo','Sep','Okt','Nov','Dis'];
+let D={waris:[],murid:[],bayaran:[],kemajuan:[]};
+const N=i=>(D.murid.find(m=>m.id===i)||{}).nama||'';
+const per=r=>r.bulan?BL[r.bulan-1]+' '+r.tahun:'';
+const ym=()=>new Date().toISOString().slice(0,7);
+const opt=a=>a.map(x=>`<option value="${x[0]}">${esc(x[1])}</option>`).join('');
+document.querySelectorAll('.tp').forEach(s=>s.innerHTML=[1,2,3,4,5,6].map(i=>`<option value="TP${i}">TP${i}</option>`).join(''));
+$('kb').value=$('bb').value=ym();
+
+function mode(m){$('fa').hidden=m!=='a';$('fw').hidden=m!=='w';$('tA').className=m==='a'?'on':'';$('tW').className=m==='w'?'on':'';$('lm').textContent='';}
+function tab(t){document.querySelectorAll('.sec').forEach(s=>s.hidden=s.id!=='s-'+t);document.querySelectorAll('#nv button').forEach(b=>b.className=b.dataset.t===t?'on':'');$('doc').innerHTML='';}
+document.querySelectorAll('#nv button').forEach(b=>b.onclick=()=>tab(b.dataset.t));
+$('bj').onchange=()=>{$('ba').value=$('bj').value==='Registration'?20:80};
+
+async function enterAdmin(){
+ const{data:a}=await sb.from('admins').select('user_id');
+ if(!a||!a.length){await sb.auth.signOut();return false}
+ $('login').hidden=true;$('app').hidden=false;tab('m');await loadAdmin();return true}
+async function adminLogin(){
+ $('lm').textContent='';
+ const{error}=await sb.auth.signInWithPassword({email:$('em').value.trim(),password:$('pw').value});
+ if(error){$('lm').textContent='Emel atau kata laluan salah';return}
+ if(!(await enterAdmin()))$('lm').textContent='Akaun ini bukan admin'}
+async function warisLogin(){
+ $('lm').textContent='';
+ const{data,error}=await sb.rpc('waris_log_masuk',{p_telefon:norm($('tel').value),p_pin:$('pin').value});
+ if(error||!data){$('lm').textContent='No. telefon atau PIN salah';return}
+ D={waris:[data.waris],murid:data.murid,bayaran:data.bayaran,kemajuan:data.kemajuan};
+ $('login').hidden=true;$('app').hidden=false;$('nv').hidden=true;
+ document.querySelectorAll('.sec').forEach(s=>s.hidden=s.id!=='s-w');
+ $('wh').textContent='Anak '+data.waris.nama;renderAll()}
+async function logout(){await sb.auth.signOut();location.reload()}
+async function loadAdmin(){
+ const r=await Promise.all(['waris','murid','bayaran','kemajuan'].map(t=>sb.from(t).select('*').order('id')));
+ const e=r.find(x=>x.error);if(e){alert('Ralat: '+e.error.message);return}
+ D={waris:r[0].data,murid:r[1].data,bayaran:r[2].data,kemajuan:r[3].data};renderAll()}
+
+function rBay(id){$(id).innerHTML=D.bayaran.slice().reverse().map(b=>`<tr><td>${esc(b.no_resit)}</td><td>${esc(N(b.murid_id))}</td><td>${esc(b.jenis)} ${per(b)}</td><td>RM${Number(b.jumlah).toFixed(2)}</td><td><button class="btn s" onclick="resit(${b.id})">Resit</button></td></tr>`).join('')||'<tr><td colspan=5>Tiada rekod</td></tr>'}
+function rKem(id){$(id).innerHTML=D.kemajuan.slice().reverse().map(k=>`<tr><td>${esc(N(k.murid_id))}</td><td>${per(k)}</td><td>${esc(k.membaca)} / ${esc(k.menulis)} / ${esc(k.mengira)}</td><td><button class="btn s" onclick="kad(${k.id})">Kad</button></td></tr>`).join('')||'<tr><td colspan=4>Tiada rekod</td></tr>'}
+function renderAll(){
+ const W=i=>D.waris.find(w=>w.id===i)||{};
+ $('tm').innerHTML=D.murid.map(m=>`<tr><td>${esc(m.nama)}</td><td>${esc(m.kelas)}</td><td>${esc(W(m.waris_id).nama)}</td><td>${esc(W(m.waris_id).telefon)}</td><td><button class="btn s" onclick="setPin(${m.waris_id})">Set PIN</button></td></tr>`).join('')||'<tr><td colspan=5>Tiada murid</td></tr>';
+ $('wm').innerHTML=D.murid.map(m=>`<tr><td>${esc(m.nama)}</td><td>${esc(m.kelas)}</td></tr>`).join('');
+ const o=opt(D.murid.map(m=>[m.id,m.nama]));$('km').innerHTML=o;$('bm').innerHTML=o;
+ rBay('tb');rBay('wb');rKem('tk');rKem('wk')}
+
+$('fm').onsubmit=async e=>{e.preventDefault();
+ const tel=norm($('gt').value);let w=D.waris.find(x=>x.telefon===tel);
+ if(!w){const r=await sb.from('waris').insert({nama:$('gn').value.trim(),telefon:tel}).select().single();if(r.error){alert(r.error.message);return}w=r.data}
+ const r=await sb.from('murid').insert({waris_id:w.id,nama:$('cn').value.trim(),kelas:$('ck').value});
+ if(r.error){alert(r.error.message);return}
+ e.target.reset();await loadAdmin();alert('Murid disimpan. Klik "Set PIN" untuk waris.')};
+async function setPin(wid){const p=prompt('PIN baharu (6 digit):');if(!p)return;
+ const{error}=await sb.rpc('admin_set_pin',{p_waris_id:wid,p_pin:p});alert(error?error.message:'PIN disimpan')}
+$('fk').onsubmit=async e=>{e.preventDefault();const[y,m]=$('kb').value.split('-');
+ const r=await sb.from('kemajuan').insert({murid_id:+$('km').value,bulan:+m,tahun:+y,membaca:$('kr').value,menulis:$('kw').value,mengira:$('kc').value,catatan:$('kn').value}).select().single();
+ if(r.error){alert(r.error.message);return}
+ await loadAdmin();kad(r.data.id);$('kn').value=''};
+$('fb').onsubmit=async e=>{e.preventDefault();const[y,m]=$('bb').value.split('-');
+ const mu=D.murid.find(x=>x.id===+$('bm').value);
+ const no='ATI-'+y+m+'-'+Date.now().toString().slice(-6);
+ const r=await sb.from('bayaran').insert({waris_id:mu.waris_id,murid_id:mu.id,jenis:$('bj').value,jumlah:+$('ba').value,bulan:+m,tahun:+y,status:'sah',no_resit:no}).select().single();
+ if(r.error){alert(r.error.message);return}
+ await loadAdmin();resit(r.data.id)};
+
+function show(h){$('doc').innerHTML='<div class="doc">'+h+'<button class="btn g np" onclick="window.print()">Cetak / Simpan PDF</button></div>';$('doc').scrollIntoView({behavior:'smooth'})}
+function resit(id){const b=D.bayaran.find(x=>x.id===id);if(!b)return;const w=D.waris.find(x=>x.id===b.waris_id)||{};
+ show(`<h3>AKADEMI TUNAS IMPIAN</h3><p style="text-align:center;margin:0 0 12px"><b>RESIT RASMI PEMBAYARAN</b></p><div class="r"><span>No. resit</span><b>${esc(b.no_resit)}</b></div><div class="r"><span>Tarikh</span><b>${esc(String(b.created_at).slice(0,10))}</b></div><div class="r"><span>Waris</span><b>${esc(w.nama)}</b></div><div class="r"><span>Murid</span><b>${esc(N(b.murid_id))}</b></div><div class="r"><span>Bayaran</span><b>${esc(b.jenis)} ${per(b)}</b></div><div class="r"><span>Jumlah</span><b style="font-size:20px">RM${Number(b.jumlah).toFixed(2)}</b></div><p style="text-align:center;color:#b8860b"><b>Asas Kukuh, Masa Depan Gemilang!</b></p>`)}
+function kad(id){const k=D.kemajuan.find(x=>x.id===id);if(!k)return;
+ const bar=(n,v)=>`<div style="margin:12px 0"><div class="r" style="border:0;padding:0 0 4px"><b>${n}</b><b>${esc(v)}</b></div><div class="bar"><i style="width:${(parseInt(String(v).slice(2))||0)/6*100}%"></i></div></div>`;
+ show(`<h3>AKADEMI TUNAS IMPIAN</h3><p style="text-align:center;margin:0 0 12px"><b>KAD KEMAJUAN MURID</b></p><h3 style="text-align:left">${esc(N(k.murid_id))}</h3><p>${per(k)}</p>${bar('Membaca',k.membaca)}${bar('Menulis',k.menulis)}${bar('Mengira',k.mengira)}<b>Catatan guru</b><p>${esc(k.catatan||'Tiada catatan.')}</p><p style="text-align:center;color:#b8860b"><b>Asas Kukuh, Masa Depan Gemilang!</b></p>`)}
+
+sb.auth.getSession().then(({data})=>{if(data.session)enterAdmin()});
+</script></body></html>
