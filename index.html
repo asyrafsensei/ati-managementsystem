@@ -30,6 +30,7 @@ input,select,textarea{width:100%;padding:10px;border:1px solid #ddd;border-radiu
 .rx{display:flex;gap:10px;margin:12px 14px}.rx div{flex:1;border:1px dashed #142d65;border-radius:10px;padding:8px;min-height:70px;font-size:11px;color:#142d65;text-align:center}
 .rf{background:#142d65;color:#fff;padding:10px 14px;font-size:11px}
 .doc:has(.rc){border:0;padding:0;background:none}
+.kw{display:flex;gap:10px}.kw label{flex:1;position:relative;margin:0;border:1px solid #ddd;border-radius:10px;padding:11px 6px;text-align:center;font-weight:600}.kw input{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}.kw label:has(input:checked){background:var(--n);color:#fff;border-color:var(--n)}
 [hidden]{display:none!important}
 @media print{body *{visibility:hidden}#doc,#doc *{visibility:visible}#doc{position:absolute;left:0;top:0;width:100%}.np{display:none!important}}
 </style></head><body>
@@ -38,7 +39,7 @@ input,select,textarea{width:100%;padding:10px;border:1px solid #ddd;border-radiu
 <nav style="padding:0 0 10px;background:none;border:0"><button class="on" id="tA" onclick="mode('a')">Admin</button><button id="tW" onclick="mode('w')">Waris</button></nav>
 <div id="fa"><label>Emel</label><input id="em" type="email"><label>Kata laluan</label><input id="pw" type="password"><button class="btn" onclick="adminLogin()">Log masuk</button></div>
 <div id="fw" hidden><label>No. telefon</label><input id="tel" type="tel"><label>PIN 6 digit</label><input id="pin" type="password" inputmode="numeric" maxlength="6"><button class="btn" onclick="warisLogin()">Log masuk</button><p style="font-size:13px">Belum berdaftar? <a href="#" onclick="mode('r');return false">Daftar di sini</a></p></div>
-<div id="fr" hidden><label>Nama waris</label><input id="rn"><label>No. telefon</label><input id="rt" type="tel"><label>Cipta PIN 6 digit</label><input id="rp" type="password" inputmode="numeric" maxlength="6"><label>Nama murid</label><input id="rm"><label>Kelas</label><select id="rk"><option>Reading</option><option>3M</option></select><button class="btn" onclick="daftarWaris()">Daftar</button><p style="font-size:12px;color:#777">Pendaftaran akan disahkan oleh admin ATI.</p><p style="font-size:13px"><a href="#" onclick="mode('w');return false">Sudah berdaftar? Log masuk</a></p></div>
+<div id="fr" hidden><label>Nama waris</label><input id="rn"><label>No. telefon</label><input id="rt" type="tel"><label>Alamat</label><textarea id="ra" rows="2"></textarea><label>Kawasan kediaman</label><div class="kw"><label><input type="radio" name="rkw" value="Dalam PR1MA">Dalam PR1MA</label><label><input type="radio" name="rkw" value="Luar PR1MA">Luar PR1MA</label></div><label>Cipta PIN 6 digit</label><input id="rp" type="password" inputmode="numeric" maxlength="6"><label>Nama murid</label><input id="rm"><label>Kelas</label><select id="rk"><option>Reading</option><option>3M</option></select><button class="btn" onclick="daftarWaris()">Daftar</button><p style="font-size:12px;color:#777">Pendaftaran akan disahkan oleh admin ATI.</p><p style="font-size:13px"><a href="#" onclick="mode('w');return false">Sudah berdaftar? Log masuk</a></p></div>
 <div class="msg" id="lm"></div></div><div id="ib1"></div></div>
 
 <div id="app" hidden>
@@ -46,7 +47,7 @@ input,select,textarea{width:100%;padding:10px;border:1px solid #ddd;border-radiu
 <nav id="nv"><button data-t="m" class="on">Murid</button><button data-t="k">Kemajuan 3M</button><button data-t="b">Yuran</button><button data-t="i">Info</button></nav>
 <main>
 <div class="sec" id="s-m">
-<div class="card"><h2>Daftar murid</h2><form id="fm"><label>Nama waris</label><input id="gn" required><label>No. telefon waris</label><input id="gt" type="tel" required><label>Nama murid</label><input id="cn" required><label>Kelas</label><select id="ck"><option>Reading</option><option>3M</option></select><button class="btn">Simpan</button></form></div>
+<div class="card"><h2>Daftar murid</h2><form id="fm"><label>Nama waris</label><input id="gn" required><label>No. telefon waris</label><input id="gt" type="tel" required><label>Alamat</label><textarea id="ga" rows="2" required></textarea><label>Kawasan kediaman</label><div class="kw"><label><input type="radio" name="gk" value="Dalam PR1MA" required>Dalam PR1MA</label><label><input type="radio" name="gk" value="Luar PR1MA">Luar PR1MA</label></div><label>Nama murid</label><input id="cn" required><label>Kelas</label><select id="ck"><option>Reading</option><option>3M</option></select><button class="btn">Simpan</button></form></div>
 <div class="card"><h2>Senarai murid</h2><div class="tw"><table><thead><tr><th>Murid</th><th>Kelas</th><th>Status</th><th>Waris</th><th>Telefon</th><th></th></tr></thead><tbody id="tm"></tbody></table></div></div></div>
 
 <div class="sec" id="s-k" hidden>
@@ -110,10 +111,10 @@ async function warisLogin(){
  $('login').hidden=true;$('app').hidden=false;$('nv').hidden=true;
  document.querySelectorAll('.sec').forEach(s=>s.hidden=s.id!=='s-w');
  $('wh').textContent='Anak '+data.waris.nama;renderAll()}
-const ERR={telefon_wujud:'No. telefon ini sudah berdaftar. Sila log masuk atau hubungi admin.',pin_tak_sah:'PIN mesti 6 digit.',telefon_tak_sah:'No. telefon tidak sah.',data_tak_lengkap:'Sila isi nama dengan lengkap.',kelas_tak_sah:'Kelas tidak sah.'};
+const ERR={telefon_wujud:'No. telefon ini sudah berdaftar. Sila log masuk atau hubungi admin.',pin_tak_sah:'PIN mesti 6 digit.',telefon_tak_sah:'No. telefon tidak sah.',data_tak_lengkap:'Sila isi nama dengan lengkap.',kelas_tak_sah:'Kelas tidak sah.',alamat_tak_sah:'Sila isi alamat dengan lengkap.',kawasan_tak_sah:'Sila pilih Dalam PR1MA atau Luar PR1MA.'};
 async function daftarWaris(){
  $('lm').textContent='';const tel=norm($('rt').value),pin=$('rp').value;
- const{data,error}=await sb.rpc('waris_daftar',{p_nama:$('rn').value,p_telefon:tel,p_pin:pin,p_murid:$('rm').value,p_kelas:$('rk').value});
+ const{data,error}=await sb.rpc('waris_daftar',{p_nama:$('rn').value,p_telefon:tel,p_pin:pin,p_murid:$('rm').value,p_kelas:$('rk').value,p_alamat:$('ra').value,p_kawasan:(document.querySelector('input[name=rkw]:checked')||{}).value||''});
  if(error){$('lm').textContent='Ralat: '+error.message;return}
  if(data!=='ok'){$('lm').textContent=ERR[data]||'Pendaftaran gagal';return}
  $('tel').value=tel;$('pin').value=pin;await warisLogin()}
@@ -149,14 +150,14 @@ function rBay(id){$(id).innerHTML=D.bayaran.slice().reverse().map(b=>`<tr><td>${
 function rKem(id){$(id).innerHTML=D.kemajuan.slice().reverse().map(k=>`<tr><td>${esc(N(k.murid_id))}</td><td>${per(k)}</td><td>${esc(k.membaca)} / ${esc(k.menulis)} / ${esc(k.mengira)}</td><td><button class="btn s" onclick="kad(${k.id})">Kad</button></td></tr>`).join('')||'<tr><td colspan=4>Tiada rekod</td></tr>'}
 function renderAll(){
  const W=i=>D.waris.find(w=>w.id===i)||{};
- $('tm').innerHTML=D.murid.map(m=>`<tr><td>${esc(m.nama)}</td><td>${m.disahkan===false?`<select onchange="tukarKelas(${m.id},this.value)">${kOpt(m.kelas)}</select>`:esc(kl(m.kelas))}</td><td>${m.disahkan===false?'<b style="color:#b3261e">Menunggu</b>':'Sah'}</td><td>${esc(W(m.waris_id).nama)}</td><td>${esc(W(m.waris_id).telefon)}</td><td>${m.disahkan===false?`<button class="btn g s" onclick="sahkan(${m.id})">Sahkan</button> `:''}<button class="btn s" onclick="setPin(${m.waris_id})">Set PIN</button></td></tr>`).join('')||'<tr><td colspan=6>Tiada murid</td></tr>';
+ $('tm').innerHTML=D.murid.map(m=>`<tr><td>${esc(m.nama)}</td><td>${m.disahkan===false?`<select onchange="tukarKelas(${m.id},this.value)">${kOpt(m.kelas)}</select>`:esc(kl(m.kelas))}</td><td>${m.disahkan===false?'<b style="color:#b3261e">Menunggu</b>':'Sah'}</td><td>${esc(W(m.waris_id).nama)}<div style="font-size:11px;color:#777">${esc(W(m.waris_id).kawasan||'')}${W(m.waris_id).alamat?' · '+esc(W(m.waris_id).alamat):''}</div></td><td>${esc(W(m.waris_id).telefon)}</td><td>${m.disahkan===false?`<button class="btn g s" onclick="sahkan(${m.id})">Sahkan</button> `:''}<button class="btn s" onclick="setPin(${m.waris_id})">Set PIN</button></td></tr>`).join('')||'<tr><td colspan=6>Tiada murid</td></tr>';
  $('wm').innerHTML=D.murid.map(m=>`<tr><td>${esc(m.nama)}</td><td>${esc(kl(m.kelas))}</td><td>${m.disahkan===false?'Menunggu pengesahan':'Sah'}</td></tr>`).join('');
  const o=opt(D.murid.map(m=>[m.id,m.nama]));$('km').innerHTML=o;$('bm').innerHTML=o;
  const ns=D.bayaran.map(b=>parseInt(b.no_resit,10)).filter(n=>!isNaN(n));$('bn').value=String(Math.max(302,...ns)+1).padStart(4,'0');$('ti').innerHTML=(D.info||[]).slice().reverse().map(i=>`<tr><td>${esc(i.tajuk)}</td><td>${i.aktif?'Aktif':'Disembunyi'}</td><td><button class="btn s" onclick="togInfo(${i.id},${!i.aktif})">${i.aktif?'Sembunyi':'Tunjuk'}</button> <button class="btn g s" onclick="padamInfo(${i.id})">Padam</button></td></tr>`).join('')||'<tr><td colspan=3>Tiada info</td></tr>';if($('nv').hidden)peringatan();rBay('tb');rBay('wb');rKem('tk');rKem('wk')}
 
 $('fm').onsubmit=async e=>{e.preventDefault();
  const tel=norm($('gt').value);let w=D.waris.find(x=>x.telefon===tel);
- if(!w){const r=await sb.from('waris').insert({nama:$('gn').value.trim(),telefon:tel}).select().single();if(r.error){alert(r.error.message);return}w=r.data}
+ if(!w){const r=await sb.from('waris').insert({nama:$('gn').value.trim(),telefon:tel,alamat:$('ga').value.trim(),kawasan:document.querySelector('input[name=gk]:checked').value}).select().single();if(r.error){alert(r.error.message);return}w=r.data}
  const r=await sb.from('murid').insert({waris_id:w.id,nama:$('cn').value.trim(),kelas:$('ck').value});
  if(r.error){alert(r.error.message);return}
  e.target.reset();await loadAdmin();alert('Murid disimpan. Klik "Set PIN" untuk waris.')};
